@@ -4,12 +4,8 @@
  Target: http://www.ruanyifeng.com/blog/archives.html
 """
 
-import sys
-
 from aspider import AttrField, Item, Request, Spider, TextField
 from aspider_ua import middleware
-
-sys.path.append('./')
 
 from monkey.database.motor_base import MotorBase
 
@@ -53,7 +49,10 @@ class BlogSpider(Spider):
 
     async def parse(self, res):
         items = await ArchivesItem.get_items(html=res.html)
-        self.mongo_db = MotorBase(loop=self.loop).get_db()
+        try:
+            self.mongo_db = MotorBase(loop=self.loop).get_db()
+        except Exception as e:
+            self.logger.exception(e)
         for item in items:
             yield Request(
                 item.href,
