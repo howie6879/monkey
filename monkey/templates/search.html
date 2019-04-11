@@ -1,0 +1,32 @@
+{% extends "main.html" %}
+
+{% block header %}
+    <title>{{ title }} - 搜索结果</title>
+    <link rel="stylesheet" href="/statics/css/index.css">
+{% endblock %}
+
+{% block content %}
+    <header style="height: 60px;">
+        <div class="navbar-container">
+
+            <form action="/search">
+                <a href="/" class="navbar-logo" style="color: rgb(95, 95, 95);">Monkey</a>
+                <div style="padding-top: 12px;">
+                    <input class="mdui-center mdui-textfield-input" name="q" value="{{ title }}" style="width: 50%">
+                </div>
+            </form>
+        </div>
+        <div class="header-tag">共找到{{ count }}条记录 - 用时{{ time_cost }}s</div>
+    </header>
+    <section>
+        <div class="mdui-container">
+            {% for item in result %}
+                <div class="result-item mdui-center mdui-shadow-2">
+                    <div class="item-title">
+                        <a href="{{ item.url }}" target="_blank">{{ item.title }}</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

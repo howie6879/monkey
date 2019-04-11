@@ -1,14 +1,20 @@
 [[source]]
 name = "pypi"
-url = "https://pypi.python.org/simple"
+url = "https://pypi.douban.com/simple/"
 verify_ssl = true
 
 [packages]
-aspider = "*"
-motor = "*"
-aspider-ua = "*"
+motor = ""
+Sanic = "*"
+jieba = "*"
+ruia-ua = "==0.0.1"
+ruia = "==0.0.2"
+"jinja2" = "*"
+aiocache = "*"
+numpy = "*"
 
 [dev-packages]
+ipython = "*"
 
 [requires]
 python_version = "3.6"

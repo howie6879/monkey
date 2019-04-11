@@ -4,10 +4,11 @@
  Target: http://www.ruanyifeng.com/blog/archives.html
 """
 
-from aspider import AttrField, Item, Request, Spider, TextField
-from aspider_ua import middleware
+from ruia import AttrField, Item, Request, Spider, TextField
+from ruia_ua import middleware as ua_middleware
 
 from monkey.database.motor_base import MotorBase
+from monkey.spider.middlewares import se_middleware
 
 
 class ArchivesItem(Item):
@@ -30,16 +31,16 @@ class ArticleListItem(Item):
 class BlogSpider(Spider):
     """
     针对博客源 http://www.ruanyifeng.com/blog/archives.html 的爬虫
-    这里为了模拟ua，引入了一个aspider的第三方扩展
-        - aspider-ua: https://github.com/howie6879/aspider-ua
-        - pipenv install aspider-ua
+    这里为了模拟ua，引入了一个 ruia 的第三方扩展
+        - ruia-ua: https://github.com/ruia-plugins/ruia-ua
+        - pipenv install ruia-ua
         - 此扩展会自动为每一次请求随机添加 User-Agent
     """
     # 设置启动URL
     start_urls = ['http://www.ruanyifeng.com/blog/archives.html']
     # 爬虫模拟请求的配置参数
     request_config = {
-        'RETRIES': 3,
+        'RETRIES': 10,
         'DELAY': 0,
         'TIMEOUT': 20
     }
@@ -64,7 +65,7 @@ class BlogSpider(Spider):
         items = await ArticleListItem.get_items(html=res.html)
         for item in items:
             # 已经抓取的链接不再请求
-            is_exist = await self.mongo_db.docs.find_one({'url': item.href}) or {}
+            is_exist = await self.mongo_db.source_docs.find_one({'url': item.href}) or {}
 
             if not is_exist.get('html'):
                 yield Request(
@@ -75,24 +76,25 @@ class BlogSpider(Spider):
                 )
 
     async def save(self, res):
-        # 好像有两个url一样 原本的博客总数1725 在入库后变成了1723
         data = {
             'url': res.url,
             'title': res.metadata['title'],
             'html': res.html
         }
-
-        try:
-            await self.mongo_db.docs.update_one({
-                'url': data['url']},
-                {'$set': data},
-                upsert=True)
-        except Exception as e:
-            self.logger.exception(e)
+        if res.html:
+            try:
+                await self.mongo_db.source_docs.update_one({
+                    'url': data['url']},
+                    {'$set': data},
+                    upsert=True)
+            except Exception as e:
+                self.logger.exception(e)
 
 
 def main():
-    BlogSpider.start(middleware=middleware)
+    # 启用代理池插件
+    # BlogSpider.start(middleware=ua_middleware + se_middleware)
+    BlogSpider.start(middleware=ua_middleware)
 
 
 if __name__ == '__main__':

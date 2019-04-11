@@ -1,0 +1,70 @@
+body {
+    font-family: -apple-system, SF UI Text, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
+    padding: 0;
+    background-color: #f7f7f7;
+    font-size: 14px;
+    line-height: 1.8;
+    margin: 0 auto;
+    color: #313131;
+    text-rendering: geometricPrecision;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+header {
+    width: 100%;
+    height: 68px !important;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, .1);
+    background: #fff;
+    box-sizing: border-box;
+    -webkit-box-align: center;
+    text-align: right;
+    margin-bottom: 30px;
+}
+
+.navbar-container {
+    position: relative;
+    width: 1040px;
+    height: 68px;
+    line-height: 68px;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.navbar-logo {
+    font-size: 22px;
+    line-height: 22px;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    display: block;
+    width: auto;
+    max-width: 50%;
+    height: 22px;
+    margin-top: -10px;
+    margin-left: 25px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.header-tag {
+    width: 1040px;
+    margin: 0 auto;
+    font-size: 13px;
+}
+
+.result-item {
+    width: 85%;
+    height: 60px;
+    margin-top: 15px;
+    background: #fff;
+}
+
+.item-title {
+    padding: 15px 6px;
+}
+
+.item-title a {
+    text-decoration: none;
+
+}
