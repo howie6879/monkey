@@ -8,7 +8,6 @@ from ruia import AttrField, Item, Request, Spider, TextField
 from ruia_ua import middleware as ua_middleware
 
 from monkey.database.motor_base import MotorBase
-from monkey.spider.middlewares import se_middleware
 
 
 class ArchivesItem(Item):
@@ -42,19 +41,18 @@ class BlogSpider(Spider):
     request_config = {
         'RETRIES': 10,
         'DELAY': 0,
-        'TIMEOUT': 20
+        'TIMEOUT': 5
     }
     # 请求信号量
     concurrency = 10
     blog_nums = 0
 
     async def parse(self, res):
-        items = await ArchivesItem.get_items(html=res.html)
         try:
             self.mongo_db = MotorBase(loop=self.loop).get_db()
         except Exception as e:
             self.logger.exception(e)
-        for item in items:
+        async for item in ArchivesItem.get_items(html=await res.text()):
             yield Request(
                 item.href,
                 callback=self.parse_item,
@@ -62,8 +60,7 @@ class BlogSpider(Spider):
             )
 
     async def parse_item(self, res):
-        items = await ArticleListItem.get_items(html=res.html)
-        for item in items:
+        async for item in ArticleListItem.get_items(html=await res.text()):
             # 已经抓取的链接不再请求
             is_exist = await self.mongo_db.source_docs.find_one({'url': item.href}) or {}
 
@@ -76,12 +73,13 @@ class BlogSpider(Spider):
                 )
 
     async def save(self, res):
+        html = await res.text()
         data = {
             'url': res.url,
             'title': res.metadata['title'],
-            'html': res.html
+            'html': html
         }
-        if res.html:
+        if html:
             try:
                 await self.mongo_db.source_docs.update_one({
                     'url': data['url']},
