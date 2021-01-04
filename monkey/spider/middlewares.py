@@ -11,14 +11,14 @@ se_middleware = Middleware()
 
 @se_middleware.request
 async def add_random_proxy(request):
-    request.kwargs.update({'proxy': await update_proxy()})
-    request.request_config.update({'RETRY_FUNC': retry_func})
+    request.kwargs.update({"proxy": await update_proxy()})
+    request.request_config.update({"RETRY_FUNC": retry_func})
 
 
 async def update_proxy():
     proxy = await get_proxy_ip()
     if proxy:
-        proxy = 'http://' + proxy
+        proxy = "http://" + proxy
     else:
         proxy = None
     return proxy
@@ -26,7 +26,7 @@ async def update_proxy():
 
 async def retry_func(request):
     proxy = await update_proxy()
-    request.kwargs.update({'proxy': proxy})
+    request.kwargs.update({"proxy": proxy})
     return request
 
 
@@ -36,14 +36,16 @@ async def get_proxy_ip(valid: int = 1) -> str:
     :param valid:
     :return:
     """
-    proxy_server = 'http://0.0.0.0:8002'
+    proxy_server = "http://0.0.0.0:8002"
     kwargs = {
-        'json': {
+        "json": {
             # pass
         }
     }
-    res = await Request(url=proxy_server, method='POST', res_type='json', **kwargs).fetch()
-    proxy = ''
+    res = await Request(
+        url=proxy_server, method="POST", res_type="json", **kwargs
+    ).fetch()
+    proxy = ""
     if res.status == 200:
-        proxy = res.html.get('info').get('proxy')
+        proxy = res.html.get("info").get("proxy")
     return proxy

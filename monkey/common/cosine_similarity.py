@@ -2,10 +2,10 @@
 """
  Created by howie.hu at 2018/10/19.
 """
-import numpy as np
-
 from functools import reduce
 from math import sqrt
+
+import numpy as np
 
 
 class CosineSimilarity(object):
@@ -27,11 +27,8 @@ class CosineSimilarity(object):
         创建兴趣向量
         :return: word_vector = {} 文本以及文本向量 index: value 例如：[[1, 2, 1, 1, 2, 0, 1], [1, 2, 1, 2, 2, 1, 1]]
         """
-        index, value = self.target_data['index'], self.target_data['value']
-        word_vector = {
-            'index': index,
-            'value': []
-        }
+        index, value = self.target_data["index"], self.target_data["value"]
+        word_vector = {"index": index, "value": []}
         title_vector, value_vector = [], []
         all_word = set(self.init_query + value)
         for each_Word in all_word:
@@ -39,8 +36,8 @@ class CosineSimilarity(object):
             value_num = value.count(each_Word)
             title_vector.append(title_num)
             value_vector.append(value_num)
-        word_vector['value'].append(title_vector)
-        word_vector['value'].append(value_vector)
+        word_vector["value"].append(title_vector)
+        word_vector["value"].append(value_vector)
         return word_vector
 
     def calculate(self, wordVector):
@@ -50,7 +47,7 @@ class CosineSimilarity(object):
         :return: 返回各个用户相似度值
         """
         result_dic = {}
-        value = wordVector['value']
+        value = wordVector["value"]
 
         value_arr = np.array(value)
         # 余弦相似性
@@ -63,20 +60,17 @@ class CosineSimilarity(object):
         squares.append(sqrt(square_title))
         squares.append(sqrt(square_data))
         mul_of_squares = reduce(lambda x, y: x * y, squares)
-        value = float(('%.5f' % (numerator / mul_of_squares)))
-        result_dic['index'] = wordVector['index']
-        result_dic['value'] = value
+        value = float(("%.5f" % (numerator / mul_of_squares)))
+        result_dic["index"] = wordVector["index"]
+        result_dic["value"] = value
         return result_dic
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from monkey.common.doc_tools import text_seg
 
-    value = text_seg('学习c语言之路')
-    data = {
-        'index': '学习c语言的教材',
-        'value': text_seg('学习c语言的教材')
-    }
+    value = text_seg("学习c语言之路")
+    data = {"index": "学习c语言的教材", "value": text_seg("学习c语言的教材")}
     cos = CosineSimilarity(value, data)
     vector = cos.create_vector()
     result = cos.calculate(vector)

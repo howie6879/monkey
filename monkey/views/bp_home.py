@@ -5,25 +5,25 @@
 import sys
 import time
 
-from sanic import Blueprint
-
 from jinja2 import Environment, PackageLoader, select_autoescape
+from sanic import Blueprint
 from sanic.response import html, json, text
 
-from monkey.config import Config
 from monkey.common.doc_search import doc_search
+from monkey.config import Config
 
 bp_home = Blueprint(__name__)
-bp_home.static('/statics', Config.BASE_DIR + '/statics/')
+bp_home.static("/statics", Config.BASE_DIR + "/statics/")
 
 # 开启异步特性  要求3.6+
 enable_async = sys.version_info >= (3, 6)
 
 # jinjia2 config
 env = Environment(
-    loader=PackageLoader('views.bp_home', '../templates'),
-    autoescape=select_autoescape(['html', 'xml', 'tpl']),
-    enable_async=enable_async)
+    loader=PackageLoader("views.bp_home", "../templates"),
+    autoescape=select_autoescape(["html", "xml", "tpl"]),
+    enable_async=enable_async,
+)
 
 
 async def template(tpl, **kwargs):
@@ -32,15 +32,15 @@ async def template(tpl, **kwargs):
     return html(rendered_template)
 
 
-@bp_home.route('/')
+@bp_home.route("/")
 async def index(request):
-    return await template('index.html')
+    return await template("index.html")
 
 
-@bp_home.route('/search')
+@bp_home.route("/search")
 async def index(request):
     start = time.time()
-    query = str(request.args.get('q', '')).strip()
+    query = str(request.args.get("q", "")).strip()
     if query:
         cache_result = await request.app.cache.get(query)
         if cache_result:
@@ -52,13 +52,13 @@ async def index(request):
             result = await doc_search(query=query, mongo_db=mongo_db)
             await request.app.cache.set(query, result)
         # 为了能看出加了缓存后查询时间的差异，小数点往后移动到6位
-        time_cost = float('%.6f' % (time.time() - start))
+        time_cost = float("%.6f" % (time.time() - start))
         return await template(
-            'search.html',
+            "search.html",
             title=query,
             result=result,
             count=len(result),
-            time_cost=time_cost
+            time_cost=time_cost,
         )
     else:
-        return await template('index.html')
+        return await template("index.html")

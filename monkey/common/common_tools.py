@@ -15,7 +15,7 @@ def gen_stop_words():
     https://github.com/goto456/stopwords/blob/09002cceefe2e47487b21d5d6cf49c60ef3c1ee5/%E5%93%88%E5%B7%A5%E5%A4%A7%E5%81%9C%E7%94%A8%E8%AF%8D%E8%A1%A8.txt
     :return:
     """
-    with open(os.path.join(Config.BASE_DIR, 'common/stop_words.txt'), 'r') as fp:
+    with open(os.path.join(Config.BASE_DIR, "common/stop_words.txt"), "r") as fp:
         stop_words = [_.strip() for _ in fp.readlines()]
     return stop_words
 
@@ -37,5 +37,5 @@ def text_seg(text: str, stop_words: list = None) -> list:
     return seg_list
 
 
-if __name__ == '__main__':
-    print(text_seg('学习c语言的教材'))
+if __name__ == "__main__":
+    print(text_seg("学习c语言的教材"))
