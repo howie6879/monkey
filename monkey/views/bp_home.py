@@ -7,7 +7,7 @@ import time
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 from sanic import Blueprint
-from sanic.response import html, json, text
+from sanic.response import html
 
 from monkey.common.doc_search import doc_search
 from monkey.config import Config

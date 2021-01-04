@@ -38,4 +38,4 @@ def text_seg(text: str, stop_words: list = None) -> list:
 
 
 if __name__ == "__main__":
-    print(text_seg("学习c语言的教材"))
+    print(text_seg("乔布斯的管理课"))

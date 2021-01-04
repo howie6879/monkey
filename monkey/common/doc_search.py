@@ -80,7 +80,7 @@ async def doc_search(*, query: str, mongo_db=None) -> list:
 
 
 if __name__ == "__main__":
-    res = asyncio.get_event_loop().run_until_complete(doc_search(query="乔布斯的管理课"))
+    res = asyncio.get_event_loop().run_until_complete(doc_search(query="学习c语言之路"))
     for each in res:
         print(each["title"])
         print(each["cs_value"])
