@@ -1,17 +1,17 @@
 [[source]]
 name = "pypi"
-url = "https://pypi.douban.com/simple/"
+url = "https://mirrors.aliyun.com/pypi/simple/"
 verify_ssl = true
 
 [packages]
 motor = "==2.3.0"
 Sanic = "==20.12.0"
-jieba = "*"
+jieba = "==0.42.1"
 ruia-ua = "==0.0.2"
 ruia = "==0.8.0"
-"jinja2" = "*"
+"jinja2" = "==2.11.2"
 aiocache = "==0.11.1"
-numpy = "*"
+numpy = "==1.19.4"
 
 [dev-packages]
 ipython = "*"
